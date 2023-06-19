@@ -2,9 +2,9 @@ import pickle
 
 import numpy as np
 import logging
-import torch
+# import torch
 # from transformers import AutoModelForSequenceClassification, AutoTokenizer
-from transformers import AutoModelForSequenceClassification, AutoTokenizer, AutoModelForMaskedLM
+# from transformers import AutoModelForSequenceClassification, AutoTokenizer, AutoModelForMaskedLM
 
 
 def get_top_prediction_with_proba(model,X_test,k=1):
@@ -30,38 +30,38 @@ loaded_model = pickle.load(open(model_path, 'rb'))
 loaded_transformer = pickle.load(open(transformer_path, 'rb'))
 
 
-test_features=loaded_transformer.transform(["INPUT TEXT"])
-get_top_prediction_with_proba(loaded_model,test_features,1)
+# test_features=loaded_transformer.transform(["INPUT TEXT"])
+# get_top_prediction_with_proba(loaded_model,test_features,1)
 
 def detect_hate_speech_ml(input_text):
     test_features=loaded_transformer.transform([input_text])
     return 1-get_top_prediction_with_proba(loaded_model,test_features,1)[1]
 
-model_path = "loadedmodel/hateBERT"
-# tokenizer = AutoTokenizer.from_pretrained(model_path)
-# model = AutoModelForSequenceClassification.from_pretrained(model_path)
+# model_path = "loadedmodel/hateBERT"
+# # tokenizer = AutoTokenizer.from_pretrained(model_path)
+# # model = AutoModelForSequenceClassification.from_pretrained(model_path)
 
-tokenizer = AutoTokenizer.from_pretrained("raphaesq/autotrain-filipino-hate-speech-roberta-tagalog-base-66889136741")
+# tokenizer = AutoTokenizer.from_pretrained("raphaesq/autotrain-filipino-hate-speech-roberta-tagalog-base-66889136741")
 
-model = AutoModelForSequenceClassification.from_pretrained("raphaesq/autotrain-filipino-hate-speech-roberta-tagalog-base-66889136741")
+# model = AutoModelForSequenceClassification.from_pretrained("raphaesq/autotrain-filipino-hate-speech-roberta-tagalog-base-66889136741")
 
-def detect_hate_speech_dl(input_text):
-    inputs = tokenizer.encode_plus(
-        input_text,
-        add_special_tokens=True,
-        return_tensors="pt",
-        padding="longest",
-        truncation=True
-    )
-    outputs = model(**inputs)
-    logits = outputs.logits
+# def detect_hate_speech_dl(input_text):
+#     inputs = tokenizer.encode_plus(
+#         input_text,
+#         add_special_tokens=True,
+#         return_tensors="pt",
+#         padding="longest",
+#         truncation=True
+#     )
+#     outputs = model(**inputs)
+#     logits = outputs.logits
 
-    probabilities = torch.softmax(logits, dim=1)
-    confidence_score = probabilities[0][0].item()
+#     probabilities = torch.softmax(logits, dim=1)
+#     confidence_score = probabilities[0][0].item()
 
-    # print(probabilities[0][0].item())
+#     # print(probabilities[0][0].item())
     
-    return 1 - confidence_score
+#     return 1 - confidence_score
     
 
 

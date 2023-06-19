@@ -19,9 +19,9 @@ def index():
     # Call your Python script to calculate the confidence score based on the selected model
     if model_selection == 'machine_learning':
         confidence_score = calculate_confidence_score_machine_learning(input_text)
+        targets = get_targets(input_text)
     elif model_selection == 'deep_learning':
         confidence_score = calculate_confidence_score_deep_learning(input_text)
-
         targets = get_targets(input_text)
     return render_template('form.html', model_selection=model_selection, confidence_score=confidence_score, targets=targets, input_text=input_text)
 

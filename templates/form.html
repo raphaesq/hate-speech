@@ -1,0 +1,166 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>may hate speech ba?</title>
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open%20Sans">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css">
+	<link rel="shortcut icon" href="myIcon.ico" type="image/x-icon">
+	<style>
+		body {
+			background-color: #F9F9F9;
+			font-family: 'Open Sans', sans-serif;
+		}
+
+		.container {
+			max-width: 500px;
+			margin: 0 auto;
+			padding: 30px;
+			border-radius: 10px;
+			background-color: #FFFFFF;
+			box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
+		}
+
+		h1, h2, h3, h4, h5, h6 {
+			margin: 0;
+			font-weight: bold;
+		}
+
+		h1 {
+			font-size: 2.5rem;
+			color: #333333;
+			margin-bottom: 10px;
+		}
+
+		h2 {
+			font-size: 1.5rem;
+			color: #333333;
+			margin-bottom: 10px;
+		}
+
+		p {
+			margin: 0;
+			font-size: 1rem;
+			color: #333333;
+			margin-bottom: 10px;
+		}
+
+		input[type="text"] {
+			width: 100%;
+			border: none;
+			padding: 10px;
+			border-radius: 5px;
+			background-color: #F9F9F9;
+			box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+			color: #333333;
+			font-size: 1.2rem;
+			margin-bottom: 20px;
+		}
+
+		button[type="submit"] {
+			width: 100%;
+			border: none;
+			padding: 10px;
+			border-radius: 5px;
+			background-color: #333333;
+			color: #FFFFFF;
+			font-size: 1.2rem;
+			cursor: pointer;
+			transition: background-color 0.3s ease;
+			margin-bottom: 20px;
+		}
+
+		button[type="submit"]:hover {
+			background-color: #222222;
+		}
+
+		.result-box {
+			display: flex;
+			align-items: center;
+			padding: 20px;
+			border-radius: 5px;
+			font-size: 1.2rem;
+			font-weight: bold;
+			margin-bottom: 20px;
+		}
+
+		.result-box-green {
+			background-color: #4CAF50;
+			color: #FFFFFF;
+		}
+
+		.result-box-red {
+			background-color: #FF5252;
+			color: #FFFFFF;
+		}
+
+		.tag {
+			font-size: 1.2rem;
+			font-weight: bold;
+			margin-left: 10px;
+		}
+
+		.tag-hate-speech {
+			color: #FFFFFF;
+		}
+
+		.tag-non-hate-speech {
+			color: #FFFFFF;
+		}
+
+		.text-center {
+			text-align: center;
+		}
+	</style>
+</head>
+<body>
+	<div class="container">
+		<div class="jumbotron">
+			<h1 class="display-4">may hate speech ba? 🤬</h1>
+			<p class="lead">Isa itong web app na gumagamit ng machine learning upang ma-detect kung ang text input ay naglalaman ng hate speech o hindi. Ang app na ito ay naka-focus sa Filipino/Taglish text input. Ilagay ang text sa baba upang ma-analyze at i-click ang submit button.</p>
+			<hr class="my-4">
+			<p>Disclaimer: Ang tool na ito ay hindi perfect at maaaring magkamali. Gamitin ang app sa pansariling discretion.</p>
+		</div>
+		<h2 class="text">
+			<form method="POST" action="/">
+				<div class="form-group">
+					<label for="model_selection">Model Selection:</label>
+					<select class="form-control" id="model_selection" name="model_selection">
+						<option value="machine_learning" {% if model_selection == 'machine_learning' %}selected{% endif %}>Machine Learning (Logistic Regression)</option>
+						<option value="deep_learning" {% if model_selection == 'deep_learning' %}selected{% endif %}>Deep Learning (Tagalog RoBERTa)</option>
+					</select>
+				  </div>
+				<div class="form-group">
+				  <label for="input_text">Input Text:</label>
+				  <input type="text" class="form-control" id="input_text" name="input_text" value="{{ input_text }}">
+				</div>
+				<button type="submit" class="btn btn-primary">Submit</button>
+			  </form>
+			  {% if confidence_score %}
+				<hr>
+				<h2 class="text-center">Results</h2>
+				<p>Input Text: {{ input_text }}</p>
+				<div class="result-box {% if confidence_score > 0.5 %}result-box-red{% else %}result-box-green{% endif %}">
+				  <span class="tag {% if confidence_score > 0.5 %}tag-hate-speech{% else %}tag-non-hate-speech{% endif %}">
+					{% if confidence_score > 0.5 %}Hate Speech{% else %}Non-Hate Speech{% endif %}
+				  </span>
+				  &nbsp;(Predicted Label: {{ "%.2f" % confidence_score }})
+				</div>
+			  {% endif %}
+{% if targets %}
+  <hr>
+  <h2 class="text-center">Possible Subjects</h2>
+  <ul>
+    {% for target in targets %}
+      <li>{{ target }}</li>
+    {% endfor %}
+  </ul>
+{% endif %}
+			</div>
+			<!-- Load Bootstrap JS (jQuery and Popper.js are required for Bootstrap JS) -->
+			<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+			<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+			<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+		  </body>
+		</html>
